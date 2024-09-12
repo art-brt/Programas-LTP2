@@ -1,0 +1,149 @@
+Public Class Form1
+
+    Dim palavra, tentadas As String
+    Dim letra As Char
+    Dim quantidade, erros, faltam As Integer
+    Dim achou, tentou As Boolean
+
+    Private Sub tbpalavra_TextChanged(sender As Object, e As EventArgs) Handles tbpalavra.TextChanged
+
+    End Sub
+
+    Dim escondido(20) As Char
+
+    Private Sub btcomecar_Click(sender As Object, e As EventArgs) Handles btcomecar.Click
+        If tbpalavra.Text = "" Then
+            MsgBox("Por favor, digite uma palavra")
+            tbpalavra.Focus()
+        Else
+            palavra = tbpalavra.Text
+            quantidade = Len(palavra)
+            tbpalavra.Enabled = False
+            btcomecar.Enabled = False
+            tbletra.Enabled = True
+            bttentar.Enabled = True
+            lbtentadas.Text = ""
+            lbpalavra.Text = ""
+
+            For contador As Integer = 0 To (quantidade - 1)
+                escondido(contador) = "*"
+                lbpalavra.Text = lbpalavra.Text + "*"
+            Next
+
+            tbletra.Focus()
+            pbcabeca.Visible = False
+            pbtorso.Visible = False
+            pbbracod.Visible = False
+            pbbracoe.Visible = False
+            pbpernad.Visible = False
+            pbpernae.Visible = False
+            erros = 0
+            faltam = quantidade
+
+        End If
+    End Sub
+
+    Private Sub bttentar_Click(sender As Object, e As EventArgs) Handles bttentar.Click
+        letra = tbletra.Text
+
+        'código para procurar a letra entra as que já foram descobertas'
+
+        For contador As Integer = 0 To (quantidade - 1)
+            If letra = escondido(contador) Then
+                tentou = True
+            End If
+        Next
+
+        'código para procurar a letra entre as que já foram erradas'
+        tentadas = lbtentadas.Text
+        For contador As Integer = 0 To (Len(tentadas) - 1)
+            If letra = tentadas(contador) Then
+                tentou = True
+            End If
+        Next
+
+        'código para procurar a letra na palavra'
+        If tentou = True Then
+            MsgBox("Ops... essa letra já foi!")
+        Else
+            For contador As Integer = 0 To (quantidade - 1)
+                If letra = palavra(contador) Then
+                    escondido(contador) = letra
+                    achou = True
+                    faltam = faltam - 1
+                End If
+            Next
+        End If
+
+        'código para atualizar a interface'
+
+        lbpalavra.Text = ""
+        For contador As Integer = 0 To (quantidade - 1)
+            lbpalavra.Text = lbpalavra.Text + escondido(contador)
+        Next
+
+        'código para identificar vitória'
+
+        If faltam = 0 Then
+            MsgBox("Você Venceu!")
+            resetar()
+        End If
+
+        'código para mostrar as letras tentadas'
+
+        If tentou = False And achou = False Then
+            erros = erros + 1
+            lbtentadas.Text = lbtentadas.Text + " " + letra
+
+        End If
+
+        If erros = 1 Then
+            pbcabeca.Visible = True
+        End If
+        If erros = 2 Then
+            pbtorso.Visible = True
+        End If
+        If erros = 3 Then
+            pbbracod.Visible = True
+        End If
+        If erros = 4 Then
+            pbbracoe.Visible = True
+        End If
+        If erros = 5 Then
+            pbpernad.Visible = True
+        End If
+        If erros = 6 Then
+            pbpernae.Visible = True
+            MsgBox("Você Perdeu...")
+            resetar()
+        End If
+
+        'reinicializando variáveis'
+
+        tentou = False
+        achou = False
+        tbletra.Text = ""
+        tbletra.Focus()
+
+    End Sub
+
+    Private Sub resetar()
+        tbpalavra.Text = ""
+        tbpalavra.Enabled = True
+        btcomecar.Enabled = True
+        tbletra.Text = ""
+        tbletra.Enabled = False
+        bttentar.Enabled = False
+        lbpalavra.Text = "***"
+        lbtentadas.Text = "***"
+        erros = 0
+        faltam = 0
+        pbcabeca.Visible = False
+        pbtorso.Visible = False
+        pbbracod.Visible = False
+        pbbracoe.Visible = False
+        pbpernad.Visible = False
+        pbpernae.Visible = False
+    End Sub
+
+End Class
