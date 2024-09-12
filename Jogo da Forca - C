@@ -1,0 +1,200 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Media;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+
+namespace FORCA_C
+{
+    public partial class Form1 : Form
+    {
+        string palavra, tentadas;
+        char letra;
+        int quantidade = 0, erros = 0, faltam = 0;
+        bool achou = false, tentou = false;
+        char[] escondido;
+
+        public Form1()
+        {
+            InitializeComponent();
+            escondido = new char[20]; 
+        }
+
+        private void bttentar_Click(object sender, EventArgs e)
+        {
+            if (tbletra.Text == "")
+            {
+                MessageBox.Show("Por favor, digite uma letra");
+                tbletra.Focus();
+            }
+            else
+            {
+                letra = tbletra.Text[0];
+                //código para verifiar se a letra já foi encontrada 
+                for (int cont=0; cont !=quantidade; cont++)
+                {
+                    if (letra == escondido[cont])
+                    {
+                        tentou = true;
+                    }
+                }
+
+                //código para verificar se a letra já foi tentada 
+                tentadas = lbtentadas.Text;
+                int quant = tentadas.Length;
+                for (int cont=0; cont != quant; cont++)
+                {
+                    if (letra == tentadas[cont])
+                    {
+                        tentou = true;
+                    }
+                }
+
+                if (tentou == true)
+                {
+                    MessageBox.Show("Você já tentou essa letra");
+                }
+                else
+                {
+                    for (int cont=0; cont != quantidade; cont++)
+                    {
+                        if (letra == palavra[cont])
+                        {
+                            escondido[cont] = letra;
+                            achou = true;
+                            faltam = faltam - 1;
+                        }
+                    }
+                }
+
+                //atualizando a palavra exibida na label 
+                
+                lbpalavra.Text = "";
+                for (int cont=0; cont != quantidade; cont++)
+                {
+                    lbpalavra.Text = lbpalavra.Text + escondido[cont];
+
+                }
+
+                //código para o caso de vitória
+                if (faltam == 0)
+                {
+                    MessageBox.Show("Parabéns, você venceu!");
+                    tbpalavra.Enabled = true;
+                    btcomecar.Enabled = true;
+                    tbletra.Enabled = false;
+                    bttentar.Enabled = false;
+                    tbpalavra.Text = "";
+                    tbpalavra.Focus();
+                }
+
+                //código em caso de erro do usuário 
+                if((achou == false) & (tentou == false))
+                {
+                    erros++;
+                    lbtentadas.Text = lbtentadas.Text + " " + letra;
+                }
+                //código pra exibir as partes da boneca 
+                if (erros == 1)
+                {
+                    pbcabeca.Visible = true;
+                }
+                if (erros == 2)
+                {
+                    pbtronco.Visible = true;
+                }
+                if (erros == 3)
+                {
+                    pbbracod.Visible = true;
+                }
+                if (erros == 4)
+                {
+                    pbbracoe.Visible = true;
+                }
+                if (erros == 5)
+                {
+                    pbpernad.Visible = true;
+                }
+                //código para caso de derrota >///<
+
+                if (erros == 6)
+                {
+                    pbpernae.Visible = true;
+                    MessageBox.Show("Você perdeu...");
+                    tbpalavra.Enabled = true;
+                    btcomecar.Enabled = true;
+                    tbletra.Enabled = false;
+                    bttentar.Enabled = false;
+                    tbpalavra.Text = "";
+                    tbpalavra.Focus();
+                }
+                //reinicializando as variáveis
+                tentou = false;
+                achou = false;
+                tbletra.Text = "";
+                tbletra.Focus();
+                
+            }
+        }
+
+        private void label7_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox8_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btcomecar_Click(object sender, EventArgs e)
+        {
+            if (tbpalavra.Text == "")
+            {
+                MessageBox.Show("Digite uma palavra para começar");
+                tbpalavra.Focus();
+            }
+            else
+            {
+                palavra = tbpalavra.Text;
+                quantidade = palavra.Length;
+                faltam = quantidade;
+                lbpalavra.Text = "";
+                lbtentadas.Text = "";
+
+                for (int cont = 0; cont != quantidade; cont++)
+                {
+                    escondido[cont] = '*';
+                    lbpalavra.Text = lbpalavra.Text + escondido[cont];
+
+                }
+
+                erros = 0;
+                pbcabeca.Visible = false;
+                pbtronco.Visible = false;
+                pbbracod.Visible = false;
+                pbbracoe.Visible = false;
+                pbpernad.Visible = false;
+                pbpernae.Visible = false;
+                btcomecar.Enabled = false;
+                tbpalavra.Enabled = false;
+                tbletra.Enabled = true;
+                bttentar.Enabled = true;
+                tbletra.Focus();
+
+            }
+
+        }
+    }
+}
